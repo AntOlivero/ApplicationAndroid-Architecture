@@ -15,10 +15,11 @@ public class HomeViewModel extends ViewModel {
     //TODO : remplacer le setValue par les info du serveur JS
 
     public HomeViewModel() {
+        jMusique = new MutableLiveData<>();
         nMusique = new MutableLiveData<>();
         nArtiste = new MutableLiveData<>();
-        nMusique.setValue("Musique choisi");
-        nArtiste.setValue("Artiste choisi");
+        nMusique.setValue("Musique");
+        nArtiste.setValue("Artiste");
     }
 
     public LiveData<String> getTextMusique() {

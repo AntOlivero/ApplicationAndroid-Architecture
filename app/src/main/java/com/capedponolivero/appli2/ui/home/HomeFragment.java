@@ -3,7 +3,6 @@ package com.capedponolivero.appli2.ui.home;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.view.LayoutInflater;
@@ -39,9 +38,8 @@ public class HomeFragment extends Fragment {
 
     // proxy Ice
     protected StreamServer.StreamingPrx iceStream;
+
     private String transciption;
-    //private String commande = "";
-    //private String valeurCommande = "";
     private RequestQueue requestQueue;
 
     /**
@@ -212,7 +210,6 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 System.out.println("boutton commande vocal clické");
                 speechToText();
-                //addSong();
             }
         });
 
