@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Appli2</string>
+    <string name="title_home">Home</string>
+    <string name="title_musique">Musique</string>
+    <string name="title_notifications">Notifications</string>
+
+    <string name="host_Ice">10.0.2.2</string>
+    <string name="port_Ice">10000</string>
+
+    <string name="host_StT">10.0.2.2</string>
+    <string name="port_StT">3001</string>
+</resources>

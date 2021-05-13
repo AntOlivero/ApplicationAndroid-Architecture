@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:id="@+id/musique1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/jacketMusique1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            tools:src="@tools:sample/avatars"
+            android:layout_gravity="center"/>
+
+        <TextView
+            android:id="@+id/nomMusique1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|center_vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Titre musique"
+            android:textColor="#18D663" />
+
+        <TextView
+            android:id="@+id/nomArtiste1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|center_horizontal|center_vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Nom Artiste"
+            android:textColor="#18D663" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

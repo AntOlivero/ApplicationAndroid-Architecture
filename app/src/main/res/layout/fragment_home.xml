@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#23272A"
+    tools:context=".ui.home.HomeFragment">
+
+    <ImageView
+        android:id="@+id/JacketMusique"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="75dp"
+        android:scaleType="center"
+        app:layout_constraintBottom_toTopOf="@+id/titreMusique"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/titreMusique"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="Beat it"
+        android:textColor="#18D663"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/JacketMusique"
+        app:layout_constraintBottom_toTopOf="@+id/artiste"/>
+
+    <TextView
+        android:id="@+id/artiste"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="56dp"
+        android:text="Michael Jackson"
+        android:textColor="#18D663"
+        app:layout_constraintTop_toBottomOf="@id/titreMusique"
+        app:layout_constraintBottom_toTopOf="@+id/barreLecture"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+    <SeekBar
+        android:id="@+id/barreLecture"
+        android:layout_width="328dp"
+        android:layout_height="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/artiste"
+        app:layout_constraintBottom_toTopOf="@id/commandeVocal"
+        app:tickMarkTint="#00796B" />
+
+    <Button
+        android:id="@+id/commandeVocal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="56dp"
+        android:text="Commande vocal"
+        app:backgroundTint="#18D663"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/barreLecture"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>
