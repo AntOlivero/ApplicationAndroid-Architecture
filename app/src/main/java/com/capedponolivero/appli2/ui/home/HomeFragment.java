@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,78 +24,25 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.capedponolivero.appli2.R;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Locale;
 
 import StreamServer.Song;
-import cz.msebera.android.httpclient.Header;
 
 public class HomeFragment extends Fragment {
 
-    private boolean mStartRecording = true;
-    private final String LOG_TAG = "AudioRecordTest";
-    private String fileName = null;
-    private MediaRecorder recorder = null;
     // proxy Ice
     protected StreamServer.StreamingPrx iceStream;
     private String transciption;
-    private String commande = "";
-    private String valeurCommande = "";
+    //private String commande = "";
+    //private String valeurCommande = "";
     private RequestQueue requestQueue;
-
-
-    /**
-     * action lorsque l'on appuis sur le boutton commande vocal
-     * Lance ou arrête l'enregistrement vocal selon le context
-     * @param start
-     */
-    public void onRecord(boolean start) {
-        if(start) {
-            startRecording();
-        } else {
-            stopRecording();
-        }
-    }
-
-    /**
-     * lance l'enregistrement vocal
-     */
-    public void startRecording() {
-        recorder = new MediaRecorder();
-        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        recorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
-        recorder.setOutputFile(fileName);
-        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-        System.out.println("EMPLACEMENT FILENAME : " + fileName);
-        try {
-            recorder.prepare();
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "prepare() failed");
-        }
-        recorder.start();
-    }
-
-    /**
-     * Stop l'enregistrement vocal
-     */
-    public void stopRecording() {
-        recorder.stop();
-        recorder.reset();
-        recorder.release();
-        recorder = null;
-        //sendToStT();
-    }
 
     /**
      * Connection à l'interface Ice
@@ -114,61 +60,6 @@ public class HomeFragment extends Fragment {
         } catch (Exception e) {
             System.out.println("Erreur lors de la création du proxy");
         }
-    }
-
-    /**
-     * Send file audio de l'enregistrement au server de transcription
-     * ancienne méthode
-     * TODO : Finir l'envoie
-     */
-    public void sendToStT() {
-
-        String url = String.format("http://localhost:3001/upload?file=%1$s", fileName);
-
-        AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
-        asyncHttpClient.get(url, new AsyncHttpResponseHandler() {
-            @Override
-            public void onStart() {
-
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-
-            }
-        });
-
-        /*
-        String url = String.format("http://localhost:3001/?file=%1$s", fileName);
-        System.out.println(url);
-        System.out.println(Environment.getExternalStorageDirectory().getPath());
-
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Request.Method.GET,
-                url,
-                null,
-                new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                String transcript = "";
-                try {
-                    transcript = (String) response.get("transcript");
-                    System.out.println(transcript);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                System.out.println(error);
-            }
-        });*/
     }
 
     /**
@@ -196,7 +87,7 @@ public class HomeFragment extends Fragment {
             if (resultCode == Activity.RESULT_OK && data != null) {
                 ArrayList<String> resultatTranscription = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                 transciption = resultatTranscription.get(0);
-                System.out.println(transciption);
+                System.out.println("résultat transcription : " + transciption);
                 analyseurRequete(transciption);
             }
         }
@@ -218,12 +109,19 @@ public class HomeFragment extends Fragment {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        String commande = "";
+                        String valeurCommande = "";
                         try {
                             commande = (String) response.get("commande");
                             valeurCommande = (String) response.get("musique");
                         } catch (JSONException jsonException) {
                             jsonException.printStackTrace();
                         }
+                        System.out.println("valeur de la transcription : " + transciption);
+                        System.out.println("valleur de la commande : " + commande);
+                        System.out.println("valeur de la musique renvoyé : " + valeurCommande);
+                        String[] valeurCommandeSplited = valeurCommande.split(" ");
+                        startStream(valeurCommandeSplited[1]);
                     }
                 },
                 new Response.ErrorListener() {
@@ -237,8 +135,6 @@ public class HomeFragment extends Fragment {
                 }
         );
         requestQueue.add(jsonObjectRequest);
-        System.out.println(commande);
-        System.out.println(valeurCommande);
     }
 
     /**
@@ -246,7 +142,7 @@ public class HomeFragment extends Fragment {
      * N'est vraiment utile que sur le serveur ICE
      */
     public void addSong() {
-        Song song = new Song("Sandstorm", "Darude", "", "SandStorm.mp3");
+        Song song = new Song("musique", "clien", "", "musique.mp3");
         iceStream.addSong(song);
         System.out.println("Les musiques ont été initializé");
     }
@@ -256,8 +152,10 @@ public class HomeFragment extends Fragment {
      * @param s
      */
     public void startStream(String s) {
+        System.out.println("Entré dans le start stream");
         Song song = iceStream.searchSong(s);
         iceStream.startStream(song);
+        System.out.println("Musique " + s + "lancé");
     }
 
     /**
@@ -290,8 +188,6 @@ public class HomeFragment extends Fragment {
             Bundle savedInstanceState) {
 
         createIceProxy();
-        fileName = getActivity().getExternalCacheDir().getAbsolutePath();
-        fileName += "/record.mp3";
         this.requestQueue = Volley.newRequestQueue(getActivity());
 
         HomeViewModel homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
@@ -315,16 +211,8 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 System.out.println("boutton commande vocal clické");
-                //ancienne methode de StT
-                /*onRecord(mStartRecording);
-                if(mStartRecording) {
-                    recordButton.setText("Stop recording");
-                } else {
-                    recordButton.setText("Commande vocal");
-                }
-                mStartRecording = !mStartRecording;*/
                 speechToText();
-
+                //addSong();
             }
         });
 
