@@ -9,4 +9,7 @@
 
     <string name="host_StT">10.0.2.2</string>
     <string name="port_StT">3001</string>
+
+    <string name="host_anal">127.0.0.1</string>
+    <string name="port_anal">5000</string>
 </resources>

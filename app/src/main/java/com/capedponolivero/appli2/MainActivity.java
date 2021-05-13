@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     // requesting permission to RECORD_AUDIO
     private boolean permissionToRecordAccepted = false;
-    private String [] permissions = {Manifest.permission.RECORD_AUDIO};
+    private final String [] permissions = {Manifest.permission.RECORD_AUDIO};
 
 
     /**
@@ -34,10 +34,8 @@ public class MainActivity extends AppCompatActivity {
             @NonNull String[] permissions,
             @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case REQUEST_RECORD_AUDIO_PERMISSION:
-                permissionToRecordAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                break;
+        if (requestCode == REQUEST_RECORD_AUDIO_PERMISSION) {
+            permissionToRecordAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
         }
         if (!permissionToRecordAccepted) finish();
     }
