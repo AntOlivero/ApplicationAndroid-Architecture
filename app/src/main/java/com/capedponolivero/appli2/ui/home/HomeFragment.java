@@ -51,8 +51,8 @@ public class HomeFragment extends Fragment {
     // proxy Ice
     protected StreamServer.StreamingPrx iceStream;
     private String transciption;
-    private String commande;
-    private String valeurCommande;
+    private String commande = "";
+    private String valeurCommande = "";
     private RequestQueue requestQueue;
 
 
@@ -219,7 +219,6 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            System.out.println(response);
                             commande = (String) response.get("commande");
                             valeurCommande = (String) response.get("musique");
                         } catch (JSONException jsonException) {
@@ -233,7 +232,7 @@ public class HomeFragment extends Fragment {
                         Toast.makeText(getActivity().getApplicationContext(),
                                 "La commande n'a pas fonctionné. Veuillez réessayer.",
                                 Toast.LENGTH_SHORT).show();
-                        VolleyLog.e("Erreur dans la réception de l'analyseur : ", error.getMessage());
+                        System.out.println(error.getMessage());
                     }
                 }
         );
@@ -325,6 +324,7 @@ public class HomeFragment extends Fragment {
                 }
                 mStartRecording = !mStartRecording;*/
                 speechToText();
+
             }
         });
 
