@@ -44,7 +44,7 @@ public class HomeFragment extends Fragment {
 
     private String transciption;
     private RequestQueue requestQueue;
-    private MediaPlayer mediaPlayer;
+    private MediaPlayer mediaPlayer = null;
     private boolean pause = false;
 
     /**
@@ -173,6 +173,13 @@ public class HomeFragment extends Fragment {
      */
     public void startStream(String s) {
 
+        System.out.println("Methode start Stream");
+        System.out.println("nom musique à lancer " + s);
+        if( mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
         try {
             Song song = iceStream.searchSong(s);
             iceStream.startStream(song);
@@ -180,6 +187,7 @@ public class HomeFragment extends Fragment {
             mediaPlayer = new MediaPlayer();
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             String url = String.format("http://%1$s:%2$s/%3$s.mp3", getString(R.string.host_streaming), getString(R.string.port_streaming), s);
+            System.out.println(url);
             mediaPlayer.setDataSource(url);
             mediaPlayer.prepare();
             mediaPlayer.start();
@@ -211,9 +219,11 @@ public class HomeFragment extends Fragment {
      */
     public void stopStream() {
         iceStream.stopStream();
-        mediaPlayer.stop();
-        mediaPlayer.release();
-        mediaPlayer = null;
+        if( mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
         System.out.println("La lecture a été arrété");
     }
 
