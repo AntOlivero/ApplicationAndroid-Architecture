@@ -3,7 +3,10 @@ package com.capedponolivero.appli2.ui.home;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +33,7 @@ import com.capedponolivero.appli2.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import StreamServer.Song;
@@ -41,6 +45,8 @@ public class HomeFragment extends Fragment {
 
     private String transciption;
     private RequestQueue requestQueue;
+    private MediaPlayer mediaPlayer;
+    private boolean pause = false;
 
     /**
      * Connection à l'interface Ice
@@ -115,6 +121,7 @@ public class HomeFragment extends Fragment {
                             valeurCommande = (String) response.get("musique");
                         } catch (JSONException jsonException) {
                             jsonException.printStackTrace();
+                            valeurCommande = "";
                         }
                         System.out.println("valeur de la transcription : " + transciption);
                         System.out.println("valleur de la commande : " + commande);
@@ -135,6 +142,11 @@ public class HomeFragment extends Fragment {
         requestQueue.add(jsonObjectRequest);
     }
 
+    /**
+     * select la méthode Ice à lancer selon la commande
+     * @param commande
+     * @param valeurCommande
+     */
     public void action(String commande, String valeurCommande) {
         switch (commande) {
             case "joue":
@@ -155,7 +167,7 @@ public class HomeFragment extends Fragment {
                 break;
         }
     }
-
+    
     /**
      * Ajoute une musique à la liste des musiques du serveur ICE
      * N'est vraiment utile que sur le serveur ICE
@@ -171,10 +183,20 @@ public class HomeFragment extends Fragment {
      * @param s
      */
     public void startStream(String s) {
-        System.out.println("Entré dans le start stream");
-        Song song = iceStream.searchSong(s);
-        iceStream.startStream(song);
-        System.out.println("Musique " + s + "lancé");
+
+        try {
+            Song song = iceStream.searchSong(s);
+            iceStream.startStream(song);
+            System.out.println("Musique " + s + "lancé sur le serveur proxy");
+            mediaPlayer = new MediaPlayer();
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            String url = String.format("http://%1$s:%2$s/%3$s.mp3", getString(R.string.host_streaming), getString(R.string.port_streaming), s);
+            mediaPlayer.setDataSource(url);
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+        } catch (IOException e) {
+            System.out.println(e);
+        }
     }
 
     /**
@@ -182,8 +204,17 @@ public class HomeFragment extends Fragment {
      * Relance la lecture si on refait appel à la fonction
      */
     public void pauseStream() {
-        iceStream.pauseStream();
-        System.out.println("La lecture a été mis en pause");
+        if(mediaPlayer != null) {
+            iceStream.pauseStream();
+            if (pause) {
+                mediaPlayer.start();
+                pause = false;
+            } else {
+                mediaPlayer.pause();
+                System.out.println("La lecture a été mis en pause");
+                pause = true;
+            }
+        }
     }
 
     /**
@@ -191,6 +222,9 @@ public class HomeFragment extends Fragment {
      */
     public void stopStream() {
         iceStream.stopStream();
+        mediaPlayer.stop();
+        mediaPlayer.release();
+        mediaPlayer = null;
         System.out.println("La lecture a été arrété");
     }
 

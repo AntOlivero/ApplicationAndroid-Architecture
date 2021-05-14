@@ -12,4 +12,8 @@
 
     <string name="host_anal">10.0.2.2</string>
     <string name="port_anal">5000</string>
+
+    <string name="host_streaming">10.0.2.2</string>
+    <string name="port_streaming">3200</string>
+
 </resources>
