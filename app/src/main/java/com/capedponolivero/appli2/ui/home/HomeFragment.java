@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -166,16 +165,6 @@ public class HomeFragment extends Fragment {
                 System.out.println("Aucune commande de connu");
                 break;
         }
-    }
-    
-    /**
-     * Ajoute une musique à la liste des musiques du serveur ICE
-     * N'est vraiment utile que sur le serveur ICE
-     */
-    public void addSong() {
-        Song song = new Song("musique", "clien", "", "musique.mp3");
-        iceStream.addSong(song);
-        System.out.println("Les musiques ont été initializé");
     }
 
     /**
