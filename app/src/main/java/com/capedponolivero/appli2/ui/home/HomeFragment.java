@@ -87,6 +87,7 @@ public class HomeFragment extends Fragment {
                 transciption = resultatTranscription.get(0);
                 System.out.println("résultat transcription : " + transciption);
                 analyseurRequete(transciption);
+                System.out.println("après analyseur");
             }
         }
     }
@@ -118,8 +119,7 @@ public class HomeFragment extends Fragment {
                         System.out.println("valeur de la transcription : " + transciption);
                         System.out.println("valleur de la commande : " + commande);
                         System.out.println("valeur de la musique renvoyé : " + valeurCommande);
-                        String[] valeurCommandeSplited = valeurCommande.split(" ");
-                        startStream(valeurCommandeSplited[1]);
+                        action(commande, valeurCommande);
                     }
                 },
                 new Response.ErrorListener() {
@@ -133,6 +133,27 @@ public class HomeFragment extends Fragment {
                 }
         );
         requestQueue.add(jsonObjectRequest);
+    }
+
+    public void action(String commande, String valeurCommande) {
+        switch (commande) {
+            case "joue":
+                String[] valeurCommandeSplited = valeurCommande.split(" ");
+                startStream(valeurCommandeSplited[1]);
+                break;
+            case "pause":
+                pauseStream();
+                break;
+            case "reprendre":
+                pauseStream();
+                break;
+            case "stop":
+                stopStream();
+                break;
+            default:
+                System.out.println("Aucune commande de connu");
+                break;
+        }
     }
 
     /**
